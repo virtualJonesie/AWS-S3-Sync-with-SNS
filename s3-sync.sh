@@ -13,7 +13,7 @@
 # Configuration Variable Definiitons
 # -----------------------------------------------------------------------------
 # Log File Configuration
-LOG_FILE_PATH=~/s3-sync.log
+LOG_FILE_PATH=/var/log/s3-sync.log
 
 # Sync Paths
 S3_PATH=s3://[BUCKET_NAME]/[FOLDER_NAME]/
@@ -32,7 +32,7 @@ SNS_TOPIC_MESSAGE="The S3 sync failed for server `hostname` at `date`."
 # Log the start of the S3 sync for troubleshooting.
 echo "`date` `hostname` Beginning S3 Sync" | tee -a ${LOG_FILE_PATH}
 # Execute the S3 sync command.
-/usr/bin/aws s3 sync --region ${AWS_REGION} ${S3_PATH} ${LOCAL_PATH} --no-follow-symlinks --quiet
+/usr/bin/aws s3 sync ${S3_PATH} ${LOCAL_PATH} --no-follow-symlinks --quiet
 # Capture the return code form the S3 sync command.
 RETURN_CODE=$?
 if [ $RETURN_CODE -eq 0 ]; then
