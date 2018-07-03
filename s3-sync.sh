@@ -29,6 +29,15 @@ SNS_TOPIC_MESSAGE="The S3 sync failed for server `hostname` at `date`."
 # -----------------------------------------------------------------------------
 # Script Body
 # -----------------------------------------------------------------------------
+# Check to see if the script is already running.
+for pid in $(pidof -x s3-sync.sh); do
+    echo "`date` $pid"
+    if [ $pid != $$ ]; then
+        echo "`date` `hostname` Process is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
+        exit 1
+    fi
+done
+
 # Log the start of the S3 sync for troubleshooting.
 echo "`date` `hostname` Beginning S3 Sync" | tee -a ${LOG_FILE_PATH}
 # Execute the S3 sync command.
