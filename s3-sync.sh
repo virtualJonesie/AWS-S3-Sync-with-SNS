@@ -23,7 +23,7 @@ LOCAL_PATH=/var/www/html/
 AWS_REGION=us-east-1
 
 # Simple Notification Service (SNS) Configuration
-SNS_TOPIC_ARN=
+SNS_TOPIC_ARN=[SNS_TOPIC_ARN]
 SNS_TOPIC_SUBJECT="S3 Sync Failure"
 SNS_TOPIC_MESSAGE="The S3 sync failed for server `hostname` at `date`."
 # -----------------------------------------------------------------------------
@@ -34,6 +34,15 @@ for pid in $(pidof -x s3-sync.sh); do
     echo "`date` $pid"
     if [ $pid != $$ ]; then
         echo "`date` `hostname` Process is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
+        exit 1
+    fi
+done
+
+# Check to see if the command is already running.
+for pid in $(pidof -x /usr/bin/aws); do
+    echo "`date` $pid"
+    if [ $pid != $$ ]; then
+        echo "`date` `hostname` AWS S3 Sync process is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
         exit 1
     fi
 done
