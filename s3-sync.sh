@@ -31,15 +31,17 @@ SNS_TOPIC_MESSAGE="The S3 sync failed for server `hostname` at `date`."
 # -----------------------------------------------------------------------------
 # Check to see if the script is already running.
 for pid in $(pidof -x s3-sync.sh); do
-    echo "`date` $pid"
+#    echo "`date` $pid"
     if [ $pid != $$ ]; then
-        echo "`date` `hostname` Process is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
+        echo "`date` `hostname` AWS S3 Sync script is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
         exit 1
     fi
 done
 
 # Check to see if the command is already running.
-for pid in $(pidof -x /usr/bin/aws); do
+#for pid in $(pidof -x /usr/bin/aws); do
+# Use pgrep -f "/usr/bin/aws s3 sync"
+for pid in $(pgrep -f "/usr/bin/aws s3 sync"); do
     echo "`date` $pid"
     if [ $pid != $$ ]; then
         echo "`date` `hostname` AWS S3 Sync process is already running with PID $pid" | tee -a ${LOG_FILE_PATH}
